@@ -9,5 +9,4 @@ public class ResourceLoader {
         return new String(Files.readAllBytes(
                 Paths.get(ResourceLoader.class.getResource(fileName).toURI())));
     }
-
 }

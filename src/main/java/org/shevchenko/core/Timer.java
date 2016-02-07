@@ -1,6 +1,6 @@
 package org.shevchenko.core;
 
-public class LWJGLTimer {
+public class Timer {
 
     private double lastLoopTime;
 

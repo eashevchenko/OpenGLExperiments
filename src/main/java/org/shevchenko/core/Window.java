@@ -34,7 +34,7 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class LWJGLWindow {
+public class Window {
 
     private final String title;
 
@@ -52,7 +52,7 @@ public class LWJGLWindow {
 
     private boolean resized;
 
-    public LWJGLWindow(String title, int width, int height) {
+    public Window(String title, int width, int height) {
         this.title = title;
         this.width = width;
         this.height = height;
@@ -79,9 +79,9 @@ public class LWJGLWindow {
         glfwSetWindowSizeCallback(windowHandle, windowSizeCallback = new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
-                LWJGLWindow.this.width = width;
-                LWJGLWindow.this.height = height;
-                LWJGLWindow.this.setResized(true);
+                Window.this.width = width;
+                Window.this.height = height;
+                Window.this.setResized(true);
             }
         });
 

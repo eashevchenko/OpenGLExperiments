@@ -1,4 +1,4 @@
-package org.shevchenko.core;
+package org.shevchenko.core.shader;
 
 import static org.lwjgl.opengl.GL20.*;
 

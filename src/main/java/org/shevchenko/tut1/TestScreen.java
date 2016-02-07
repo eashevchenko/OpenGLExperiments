@@ -1,22 +1,21 @@
 package org.shevchenko.tut1;
 
-import org.apache.log4j.Logger;
-import org.shevchenko.core.IScreen;
-import org.shevchenko.core.LWJGLWindow;
+import org.shevchenko.core.interfaces.IScreen;
+import org.shevchenko.core.Window;
+import org.shevchenko.core.meshes.Mesh;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.opengl.GL11.glViewport;
 
 public class TestScreen implements IScreen {
-
-    private final Logger logger = Logger.getLogger(TestScreen.class);
 
     private int direction = 0;
 
     private float color = 0.0f;
 
     private final ScreenRenderer renderer;
+
+    private Mesh mesh;
 
     public TestScreen() {
         renderer = new ScreenRenderer();
@@ -25,10 +24,26 @@ public class TestScreen implements IScreen {
     @Override
     public void init() throws Exception {
         renderer.init();
+        float[] positions = new float[]{
+                -0.5f,  0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+                0.5f,  0.5f, 0.0f,
+        };
+        float[] colours = new float[]{
+                0.5f, 0.0f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.5f, 0.5f,
+        };
+        int[] indices = new int[]{
+                0, 1, 3, 3, 1, 2,
+        };
+        mesh = new Mesh(positions, colours, indices);
     }
 
     @Override
-    public void input(LWJGLWindow window) {
+    public void input(Window window) {
         if (window.isKeyPressed(GLFW_KEY_UP)) {
             direction = 1;
         } else if (window.isKeyPressed(GLFW_KEY_DOWN)) {
@@ -49,19 +64,15 @@ public class TestScreen implements IScreen {
     }
 
     @Override
-    public void render(LWJGLWindow window) {
-        if (window.isResized()) {
-            glViewport(0, 0, window.getWidth(), window.getHeight());
-            window.setResized(false);
-            logger.info("size: " + window.getWidth() + ": " + window.getHeight());
-        }
-
+    public void render(Window window) {
         window.setClearColor(color, color, color, 0.0f);
-        renderer.render(window);
+        renderer.render(window, mesh);
     }
 
     @Override
     public void cleanup() {
         renderer.cleanup();
+        mesh.cleanUp();
     }
+
 }

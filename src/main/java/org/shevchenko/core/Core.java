@@ -1,29 +1,32 @@
 package org.shevchenko.core;
 
 
-public class LWJGLCore implements Runnable {
+import org.shevchenko.core.interfaces.IScreen;
+
+public class Core implements Runnable {
 
     public static final int TARGET_FPS = 75;
 
     public static final int TARGET_UPS = 30;
 
-    private final LWJGLWindow window;
+    private final Window window;
 
     private final Thread gameLoopThread;
 
-    private final LWJGLTimer timer;
+    private final Timer timer;
 
     private final IScreen screen;
 
-    public LWJGLCore(String windowTitle, int width, int height, IScreen screen) throws Exception {
+    public Core(String windowTitle, int width, int height, IScreen screen) throws Exception {
         gameLoopThread = new Thread(this, "LOOP_THREAD");
-        window = new LWJGLWindow(windowTitle, width, height);
+        window = new Window(windowTitle, width, height);
         this.screen = screen;
-        timer = new LWJGLTimer();
+        timer = new Timer();
     }
 
     public void start() {
         gameLoopThread.start();
+
     }
 
     @Override

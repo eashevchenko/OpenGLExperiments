@@ -1,22 +1,16 @@
 package org.shevchenko.tut1;
 
-import org.shevchenko.core.LWJGLWindow;
+import org.shevchenko.core.Window;
 import org.shevchenko.core.ResourceLoader;
-import org.shevchenko.core.ShaderProgram;
+import org.shevchenko.core.meshes.Mesh;
+import org.shevchenko.core.shader.ShaderProgram;
 
-import java.nio.FloatBuffer;
-import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 
 public class ScreenRenderer {
-
-    private int vboId;
-
-    private int vaoId;
 
     private ShaderProgram shaderProgram;
 
@@ -30,39 +24,14 @@ public class ScreenRenderer {
         shaderProgram.createVertexShader(ResourceLoader.loadResource(SHADERS_FOLDER + "test.vert"));
         shaderProgram.createFragmentShader(ResourceLoader.loadResource(SHADERS_FOLDER + "test.frag"));
         shaderProgram.link();
-
-        float[] vertices = meshVertices();
-
-        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
-        verticesBuffer.put(vertices).flip();
-
-        vaoId = glGenVertexArrays();
-        glBindVertexArray(vaoId);
-
-        vboId = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glBindVertexArray(0);
-    }
-
-    private float[] meshVertices() {
-        return new float[]{
-                    0.0f,  0.5f, 0.0f,
-                    -1.0f, -1.0f, 0.0f,
-                    1.0f,  -1.0f, 0.0f
-            };
     }
 
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0,0,0,0);
     }
 
-    public void render(LWJGLWindow window) {
+    public void render(Window window, Mesh mesh) {
         clear();
 
         if ( window.isResized() ) {
@@ -72,12 +41,14 @@ public class ScreenRenderer {
 
         shaderProgram.bind();
 
-        glBindVertexArray(vaoId);
+        glBindVertexArray(mesh.getVaoId());
         glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glDrawElements(GL_TRIANGLES, mesh.getVertexCount(), GL_UNSIGNED_INT, 0);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
         glBindVertexArray(0);
 
         shaderProgram.unbind();
@@ -87,13 +58,5 @@ public class ScreenRenderer {
         if (shaderProgram != null) {
             shaderProgram.cleanup();
         }
-
-        glDisableVertexAttribArray(0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDeleteBuffers(vboId);
-
-        glBindVertexArray(0);
-        glDeleteVertexArrays(vaoId);
     }
 }

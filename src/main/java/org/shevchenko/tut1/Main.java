@@ -1,7 +1,8 @@
 package org.shevchenko.tut1;
 
-import org.shevchenko.core.LWJGLCore;
-import org.shevchenko.core.IScreen;
+import org.lwjgl.opengl.GL11;
+import org.shevchenko.core.Core;
+import org.shevchenko.core.interfaces.IScreen;
 
 public class Main {
 
@@ -13,8 +14,8 @@ public class Main {
 
         try {
             IScreen screen = new TestScreen();
-            LWJGLCore lwjglCore = new LWJGLCore("Test01", 600, 480, screen);
-            lwjglCore.start();
+            Core core = new Core("Test01", 600, 480, screen);
+            core.start();
         } catch (Exception excp) {
             excp.printStackTrace();
             System.exit(-1);
